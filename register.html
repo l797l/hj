@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="English" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <title>Create New Account  </title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background: #f4f7f6; margin: 0; }
+        .register-card { background: white; padding: 2.5rem; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.1); width: 350px; }
+        h2 { text-align: center; color: #333; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
+        button { width: 100%; padding: 12px; background: #28a745; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; transition: background 0.3s; }
+        button:hover { background: #218838; }
+        .footer-links { text-align: center; margin-top: 15px; font-size: 14px; }
+        .footer-links a { color: #007bff; text-decoration: none; }
+        #statusMessage { margin-top: 15px; text-align: center; font-size: 14px; padding: 10px; border-radius: 4px; display: none; }
+        .error { background: #f8d7da; color: #721c24; display: block !important; }
+        .success { background: #d4edda; color: #155724; display: block !important; }
+    </style>
+</head>
+<body>
+
+<div class="register-card">
+    <h2>Create New Account</h2>
+    <input type="text" id="regName" placeholder="Full Name">
+    <input type="email" id="regEmail" placeholder="Email">
+    <input type="password" id="regPassword" placeholder="Password">
+    <button onclick="register()">Register</button>
+    
+    <div id="statusMessage"></div>
+
+    <div class="footer-links">
+        You have an account? <a href="index.html">Login</a>
+    </div>
+</div>
+
+<script>
+    async function register() {
+        const name = document.getElementById('regName').value;
+        const email = document.getElementById('regEmail').value;
+        const password = document.getElementById('regPassword').value;
+        const statusMessage = document.getElementById('statusMessage');
+
+        statusMessage.className = '';
+        statusMessage.innerText = 'Processing...';
+
+        try {
+            const response = await fetch('http://testmywork.runasp.net/api/User/Register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    name: name, 
+                    email: email, 
+                    password: password 
+                })
+            });
+
+            if (response.ok) {
+                statusMessage.className = 'success';
+                statusMessage.innerText = "Account created successfully!";
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 2000);
+            } else {
+                const errorData = await response.json();
+                statusMessage.className = 'error';
+
+                statusMessage.innerText = errorData[0]?.description || errorData || "Failed to register, please check your data";
+            }
+        } catch (error) {
+            statusMessage.className = 'error';
+            statusMessage.innerText = "Failed to connect to the server. Please ensure the API is running";
+            console.error("Error:", error);
+        }
+    }
+</script>
+</body>
+</html>

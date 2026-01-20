@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="English" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Login</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background: #f0f2f5;
+      }
+      .login-card {
+        background: white;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        width: 300px;
+      }
+      input {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+      }
+      button {
+        width: 100%;
+        padding: 10px;
+        background: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      button:hover {
+        background: #0056b3;
+      }
+      #message {
+        color: red;
+        font-size: 14px;
+        text-align: center;
+      }
+       .footer-links { text-align: center; margin-top: 15px; font-size: 14px; }
+        .footer-links a { color: #007bff; text-decoration: none; }
+    </style>
+  </head>
+  <body>
+    <div class="login-card">
+      <h2>Login</h2>
+      <input type="email" id="email" placeholder="Rmail" />
+      <input type="password" id="password" placeholder="Password" />
+      <button onclick="login()">Login</button>
+      <p id="message"></p>
+      <div class="footer-links">
+        You don't have an account? <a href="register.html">Registe</a>
+      </div>
+    </div>
+
+    <script>
+      async function login() {
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+        const message = document.getElementById("message");
+
+        try {
+          const response = await fetch(
+            "hhttp://testmywork.runasp.net/api/User/Login",
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ email, password }),
+            },
+          );
+
+          if (response.ok) {
+            const data = await response.json();
+            localStorage.setItem("token", data.token);
+            window.location.href = "profile.html";
+          } else {
+            message.innerText = "Error in Email or Password";
+          }
+        } catch (error) {
+          console.error("Error:", error);
+        }
+      }
+    </script>
+  </body>
+</html>
