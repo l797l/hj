@@ -35,13 +35,12 @@
                 payload["unique_name"] || 
                 payload["name"] || 
                 payload["email"] || 
-                "مستخدم";
+                "User";
 
             document.getElementById('userName').innerText = nameFromToken;
 
         } catch (e) {
             console.error("Error reading token:", e);
-            // logout(); 
         }
     }
 
@@ -53,3 +52,4 @@
 </body>
 
 </html>
+
